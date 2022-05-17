@@ -1,12 +1,3 @@
-// node {
-//     def app
-//     stage('Clone repository') {
-//         /* Let's make sure we have the repository cloned to our workspace */
-
-//         checkout scm
-//     }
-// }
-
 pipeline {
   agent any
  
@@ -15,7 +6,16 @@ pipeline {
   stages {
     stage('Clone Repository') {
       steps {
-        checkout scm
+        checkout scm: [
+          $class: 'GitSCM',
+          userRemoteConfigs: [
+            [
+              credentialsId: 'ee722ac1-794b-4c24-8c6a-b8bff4d98fc2'
+              url: 'https://github.com/nazordz/node-redis'
+            ]
+          ],
+          branches: [[name: 'refs/tags/${TAG}']]
+        ]
       }
     }
     stage('Install dependencies') {
